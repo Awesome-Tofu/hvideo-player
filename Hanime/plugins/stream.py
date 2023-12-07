@@ -1,8 +1,7 @@
 import os
 import asyncio
+import subprocess
 from pyrogram import Client, filters
-from pyrogram.types import Message
-from pyrogram.raw.types import InputPeerChannel
 from pytgcalls import StreamType
 from Hanime import app, bot, music
 
@@ -12,9 +11,15 @@ VIDEO_CALL = {}
 async def download_and_convert_video(reply_message, chat_id):
     try:
         video = await music.download_media(reply_message)
-        os.system(
-            f'ffmpeg -i "{video}" -vn -f s16le -ac 2 -ar 48000 -acodec pcm_s16le -filter:a "atempo=0.81" vid-{chat_id}.raw -y'
-        )
+        subprocess.run([
+            'ffmpeg',
+            '-i', video,
+            '-vn', '-f', 's16le',
+            '-ac', '2', '-ar', '48000',
+            '-acodec', 'pcm_s16le',
+            '-filter:a', 'atempo=0.81',
+            f'vid-{chat_id}.raw', '-y'
+        ], check=True)
         return True
     except Exception as e:
         print(f"Error during download and conversion: {e}")
