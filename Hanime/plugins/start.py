@@ -5,6 +5,8 @@ from pyrogram.errors import MessageNotModified
 from config import BOT_NAME, USERNAME, SUPPORT_GROUP, UPDATES_CHANNEL
 from strings import START_TEXT, HELP_TEXT, ABOUT_TEXT
 from Hanime import bot
+from pyrogram.enums import ChatType
+
 
 @bot.on_message(filters.command(["start", f"start@{USERNAME}"]))
 async def start(_, message):
@@ -25,11 +27,14 @@ async def start(_, message):
         ]
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
-    if message.chat.type == 'private':
+    if message.chat.type != ChatType.PRIVATE:
         await message.reply_text(
             START_TEXT,
             reply_markup=reply_markup
         )
+    else:
+        await message.reply_text("i am alive babe")
+        
 
 @bot.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
