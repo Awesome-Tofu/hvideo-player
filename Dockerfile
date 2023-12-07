@@ -1,17 +1,26 @@
+# Use the official Python image
 FROM python:3.10.0
 
+# Set the working directory
 WORKDIR /root/Hanime
 
+# Copy the local files to the container
 COPY . .
 
+# Upgrade pip and setuptools
 RUN pip3 install --upgrade pip setuptools
 
-RUN pip3 install -U pip && pip3 install -U -r requirements.txt
+# Install FFmpeg
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y ffmpeg
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_17.x | bash - && \
+    apt-get install -y nodejs
 
-RUN curl -sL https://deb.nodesource.com/setup_17.x | bash -
+# Install Python dependencies
+RUN pip3 install -U -r requirements.txt
 
-RUN apt-get install -y nodejs
-
+# Set the command to run your application
 CMD ["python3", "-m", "Hanime"]
