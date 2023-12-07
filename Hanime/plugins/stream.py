@@ -1,6 +1,4 @@
-import os
-import asyncio
-from pytgcalls import GroupCallFactory
+from pytgcalls.pytgcalls import GroupCallFactory
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from Hanime import app, bot, music
