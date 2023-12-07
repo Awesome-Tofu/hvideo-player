@@ -8,8 +8,8 @@ from Hanime import bot
 from pyrogram.enums import ChatType
 
 
-@bot.on_message(filters.command(["start", f"start@{USERNAME}"]))
-async def start(_, message):
+@bot.on_message(filters.command(["mystart", f"mystart@{USERNAME}"]))
+async def mystart(_, message):
     buttons = [
         [
             InlineKeyboardButton("❔ HOW TO USE ME ❔", callback_data="help"),
@@ -27,14 +27,11 @@ async def start(_, message):
         ]
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
-    if message.chat.type != ChatType.PRIVATE:
+    if message.chat.type == ChatType.PRIVATE:
         await message.reply_text(
-            START_TEXT,
+            "Welcome to my bot!\nClick on the buttons below:",
             reply_markup=reply_markup
         )
-    else:
-        await message.reply_text("i am alive babe")
-        
 
 @bot.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
@@ -102,4 +99,3 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.message.reply_to_message.delete()
         except:
             pass
-
