@@ -3,7 +3,6 @@ import asyncio
 from pytgcalls import GroupCallFactory
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from config import API_ID, API_HASH, SESSION_NAME
 from Hanime import app, bot, music
 
 group_call_factory = GroupCallFactory(app, GroupCallFactory.MTPROTO_CLIENT_TYPE.PYROGRAM)
