@@ -1,11 +1,9 @@
 import asyncio
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from pyrogram.errors import MessageNotModified
-from config import BOT_NAME, USERNAME
-from config import SUPPORT_GROUP, UPDATES_CHANNEL
+from config import BOT_NAME, USERNAME, SUPPORT_GROUP, UPDATES_CHANNEL
 from strings import START_TEXT, HELP_TEXT, ABOUT_TEXT
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
 from Hanime import bot
 
 @bot.on_message(filters.command(["start", f"start@{USERNAME}"]))
@@ -32,8 +30,6 @@ async def start(_, message):
             START_TEXT,
             reply_markup=reply_markup
         )
-    else:
-        await message.reply_text(f"**{BOT_NAME} is Alive !** ✨")
 
 @bot.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
@@ -50,8 +46,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 HELP_TEXT,
                 reply_markup=reply_markup
             )
-        except MessageNotModified:
-            pass
+        except MessageNotModified as e:
+            print(f"MessageNotModified exception: {e}")
 
     elif query.data == "about":
         buttons = [
@@ -66,8 +62,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 ABOUT_TEXT,
                 reply_markup=reply_markup
             )
-        except MessageNotModified:
-            pass
+        except MessageNotModified as e:
+            print(f"MessageNotModified exception: {e}")
 
     elif query.data == "start":
         buttons = [
@@ -92,8 +88,8 @@ async def cb_handler(client: Client, query: CallbackQuery):
                 START_TEXT,
                 reply_markup=reply_markup
             )
-        except MessageNotModified:
-            pass
+        except MessageNotModified as e:
+            print(f"MessageNotModified exception: {e}")
 
     elif query.data == "close":
         try:
@@ -101,3 +97,4 @@ async def cb_handler(client: Client, query: CallbackQuery):
             await query.message.reply_to_message.delete()
         except:
             pass
+
