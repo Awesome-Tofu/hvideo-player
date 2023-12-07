@@ -1,5 +1,5 @@
 import pyrogram
-from pytgcalls import PyTgCalls, idle
+from pytgcalls import idle
 from Hanime import bot, app
 import config
 
