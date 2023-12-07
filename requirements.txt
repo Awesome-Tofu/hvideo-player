@@ -1,5 +1,5 @@
 pyrogram
-putgcalls
+pytgcalls
 requests
 tgcrypto
 pymongo==4.3.3
