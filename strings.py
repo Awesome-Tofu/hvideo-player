@@ -12,11 +12,6 @@ HELP_TEXT = f"""
 
 ⚔️-- **Available Commands**:--
 
-\u2022 `/play` - Stream An Audio
-\u2022 `/stream` - Stream An Video
-\u2022 `/pause` - Pause Current Stream
-\u2022 `/resume` - Resume Paused Stream
-\u2022 `/endstream` - End Stream & Left VC
-\u2022 `/restart` - Restart Bot (Sudo Only)
+\u2022 `NOTE` - NO COMMANDS AVAILABLE YET !! UNDER DEVELOPMENT STAY TUNED 🤠
 """
-ABOUT_TEXT = f"💡-- **Information**:-- \n\nThis bot is created for streaming videos in telegram group video chats using several methods from WebRTC. Powered by pytgcalls the async client API for the Telegram Group Calls and Pyrogram the telegram MTProto API Client Library and Framework in Pure Python for Users and Bots. \n\n**This bot licensed under GNU-GPL 3.0 License!**"
+ABOUT_TEXT = f"💡-- **Information**:-- \n\nThis bot is created for streaming hentai videos in telegram group video chats. Powered by pytgcalls and Pyrogram the telegram MTProto API Client Library and Framework in Pure Python for Users and Bots."
