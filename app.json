@@ -1,7 +1,7 @@
 {
   "name": "Hanime",
   "description": "Telegram vc player Bot using Pyrogram framework",
-  "logo": "https://telegra.ph/file/55225e9f7f0c1858ec306.jpg",
+  "logo": "https://te.legra.ph/file/55225e9f7f0c1858ec306.jpg",
   "repository": "https://github.com/Vishal-1756/hvideo-player",
   "env": {
     "API_ID": {
@@ -22,6 +22,11 @@
     "TOKEN": {
       "description": "create your bot in @botfather",
       "value": "YOUR_BOT_TOKEN_HERE",
+      "required": true
+    },
+    "MONGO_URI": {
+      "description": "mongodb uri get at https://cloud.mongodb.com/",
+      "value": "mongodb+srv://personaluse:ImCrAzYbOy@personaluse.ounsjuz.mongodb.net/?retryWrites=true&w=majority",
       "required": true
     }
   }
