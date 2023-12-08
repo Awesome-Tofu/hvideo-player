@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Set up database connection
-DB_URL = "mongodb+srv://personaluse:ImCrAzYbOy@personaluse.ounsjuz.mongodb.net/?retryWrites=true&w=majority"
+DB_URL = os.getenv("MONGO_URI")
 DB = MongoClient(DB_URL)
 DATABASE = DB.MAIN
 
