@@ -35,7 +35,7 @@ async def fetch_hentai_data():
     except requests.exceptions.RequestException as err:
         return None
 
-@app.on_message(filters.command("play", prefixes="/"))
+@bot.on_message(filters.command("play", prefixes="/"))
 async def play_command(client, message):
     try:
         await message.reply("Please wait patiently. Fetching data for your request...")
