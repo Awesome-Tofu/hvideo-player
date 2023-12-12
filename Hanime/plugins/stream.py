@@ -55,7 +55,8 @@ async def play_command(client, message):
 
             await app.join_group_call(
                 chat_id,
-                VideoPiped(file_url)
+                # VideoPiped(file_url)
+                VideoPiped("http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4")
             )
 
         else:
