@@ -11,8 +11,8 @@ async def run_clients():
         await music.start()
 
     await pyrogram.idle()
-    await bot.send_message(chat_id=config.GROUP_ID, text="hello bot")
-    await music.send_message(chat_id=config.GROUP_ID, text="hello app")
+    await bot.send_message(chat_id=config.GROUP_ID, text="I Started Successfully `Bot`")
+    await music.send_message(chat_id=config.GROUP_ID, text="I Started Successfully `app`")
     await idle()
 
 if __name__ == "__main__":
