@@ -55,7 +55,7 @@ async def play_command(client, message):
 
             app.join_group_call(
                 chat_id,
-                AudioPiped(file_url, stream_type=StreamType().pulse_stream)
+                AudioPiped(file_url)
             )
 
         else:
