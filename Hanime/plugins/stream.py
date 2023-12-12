@@ -55,7 +55,7 @@ async def play_command(client, message):
 
             await app.join_group_call(
                 chat_id,
-                AudioPiped(file_url)
+                VideoPiped(file_url)
             )
 
         else:
