@@ -29,7 +29,7 @@ async def mystart(_, message):
     reply_markup = InlineKeyboardMarkup(buttons)
     if message.chat.type == ChatType.PRIVATE:
         await message.reply_text(
-            "Welcome to my bot!\nClick on the buttons below:",
+            START_TEXT,
             reply_markup=reply_markup
         )
 
