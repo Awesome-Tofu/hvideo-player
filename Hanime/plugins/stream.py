@@ -5,6 +5,7 @@ from pyrogram import Client, filters
 from pytgcalls import StreamType
 from pytgcalls.types import AudioPiped
 from Hanime import app, bot, music
+import requests
 
 api_url_hentai = "https://hentaibar.onrender.com/random"
 
