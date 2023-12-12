@@ -8,7 +8,7 @@ from Hanime import bot
 from pyrogram.enums import ChatType
 
 
-@bot.on_message(filters.command(["mystart", f"mystart@{USERNAME}"]))
+@bot.on_message(filters.command(["start", f"start@{USERNAME}"]))
 async def mystart(_, message):
     buttons = [
         [
