@@ -11,5 +11,5 @@ pytube
 youtube-dl
 asyncio
 ffmpeg-python
+ffprobe
 git+https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git
-git+https://github.com/jonathanong/heroku-buildpack-ffprobe-latest.git
