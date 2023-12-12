@@ -3,7 +3,7 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types import AudioPiped
+from pytgcalls.types import AudioPiped, VideoPiped
 from Hanime import app, bot, music
 import requests
 
