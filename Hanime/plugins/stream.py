@@ -3,7 +3,7 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types import AudioPiped, VideoPiped
+from pytgcalls.types import AudioPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
 
@@ -56,7 +56,7 @@ async def play_command(client, message):
             await app.join_group_call(
                 chat_id,
                 # VideoPiped(file_url)
-                VideoPiped("http://docs.evostream.com/sample_content/assets/sintel1m720p.mp4")
+                AudioVideoPiped(file_url)
             )
 
         else:
