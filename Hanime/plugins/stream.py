@@ -39,7 +39,7 @@ async def fetch_hentai_data():
 @bot.on_message(filters.command("play", prefixes="/"))
 async def play_command(client, message):
     try:
-        chat_id = -1002107596400
+        chat_id = -1001849819947
         await message.reply("Please wait patiently. Fetching data for your request...")
 
         hentai_data = await fetch_hentai_data()
