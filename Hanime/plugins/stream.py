@@ -16,7 +16,7 @@ async def fetch_hentai_data():
 
         hentai_data = response.json()
 
-        thumb_url = hentai_data.get('thum')
+        thumb_url = hentai_data.get('thumbnailUrl')
         file_url = hentai_data.get('file')
         name = hentai_data.get('name')
         upload_date = hentai_data.get('upload_date')
