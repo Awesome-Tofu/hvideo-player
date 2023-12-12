@@ -53,7 +53,7 @@ async def play_command(client, message):
 
             await message.reply_photo(thumb_url, caption=f"Name: {name}\nUpload Date: {upload_date}\nDuration: {duration}\n\nStreamlink: {file_url}")
 
-            app.join_group_call(
+            await app.join_group_call(
                 chat_id,
                 AudioPiped(file_url)
             )
