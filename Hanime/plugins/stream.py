@@ -22,10 +22,10 @@ async def play_command(_, message):
             damn = VideoPiped
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
-
+        testfile = "test.mkv"
         await app.join_group_call(
             chat_id,
-            damn(link)
+            damn(testfile)
         )
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
