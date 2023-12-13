@@ -25,8 +25,7 @@ async def play_command(_, message):
 
         await app.join_group_call(
             chat_id,
-            damn(link),
-            stream_type=StreamType().pulse_stream
+            damn(link)
         )
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
