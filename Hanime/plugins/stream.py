@@ -3,7 +3,7 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types import AudioPiped, AudioVideoPiped
+from pytgcalls.types import AudioPiped, VideoPiped
 from Hanime import app, bot, music
 import requests
 
@@ -19,7 +19,7 @@ async def play_command(_, message):
             damn = AudioPiped
             emj = "🎵"
         elif state == "vplay":
-            damn = AudioVideoPiped
+            damn = VideoPiped
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
