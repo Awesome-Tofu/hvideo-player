@@ -15,10 +15,10 @@ async def play_command(_, message):
         await message.delete()
         state = message.command[0].lower()
 
-        if state == "saudio":
+        if state == "play":
             damn = AudioPiped
             emj = "🎵"
-        elif state == "svideo":
+        elif state == "vplay":
             damn = AudioVideoPiped
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
