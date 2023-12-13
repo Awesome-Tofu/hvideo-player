@@ -30,6 +30,7 @@ async def play_command(_, message):
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
     except Exception as e:
+        print(e)
         return await m.edit(str(e))
 
     except requests.exceptions.RequestException as err:
