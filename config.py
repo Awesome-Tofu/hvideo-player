@@ -1,8 +1,8 @@
 
 
-GROUP_ID = -1001849819947
-ASSISTANT_NAME = "BlackKnights_UB"
+GROUP_ID = -1002107596400
+ASSISTANT_NAME = "Luffy"
 UPDATES_CHANNEL = "botupdatex"
-SUPPORT_GROUP = "botsupportx"
-USERNAME = "CHOOSELEBOOBSBOT"
-BOT_NAME = "dudu hentai bot"
+SUPPORT_GROUP = "lumlilumli"
+USERNAME = "huahua_rombot"
+BOT_NAME = "Check bot"

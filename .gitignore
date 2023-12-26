@@ -1,0 +1,6 @@
+bot.session
+bot.session-journal
+__pycache__
+logs.txt
+Hanime/__pycache__
+Hanime/plugins/__pycache__

@@ -11,7 +11,7 @@ import requests
 async def play_command(_, message):
     try:
         link = message.text.split(None, 1)[1]
-        chat_id = -1001849819947
+        chat_id = -1002107596400
         await message.delete()
         state = message.command[0].lower()
 
@@ -30,6 +30,7 @@ async def play_command(_, message):
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
     except Exception as e:
+        # print(e)
         return await m.edit(str(e))
 
     except requests.exceptions.RequestException as err:
