@@ -6,6 +6,13 @@ from pytgcalls import StreamType
 from pytgcalls.types.input_stream import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
+from pySmartDL import SmartDL
+
+async def download_audio(url):
+    obj = SmartDL(url, verify=False)
+    obj.start()
+    obj.wait()
+    return obj.get_dest()
 
 @bot.on_message(filters.command(["play", "vplay", "test"]) & filters.group)
 async def play_command(_, message):
@@ -28,9 +35,11 @@ async def play_command(_, message):
             link = "test.mkv"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
+        audio_path = await download_audio(link)
         await app.join_group_call(
             chat_id,
-            damn(link)
+            damn(audio_path),
+            stream_type=StreamType().pulse_stream
         )
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
