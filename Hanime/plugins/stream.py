@@ -3,7 +3,7 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types import AudioPiped, VideoPiped
+from pytgcalls.types.input_stream import AudioPiped, VideoPiped
 from Hanime import app, bot, music
 import requests
 
@@ -11,26 +11,25 @@ import requests
 async def play_command(_, message):
     try:
         link = message.text.split(None, 1)[1]
-        chat_id = m.chat.id
+        chat_id = -1001849819947
         await message.delete()
         state = message.command[0].lower()
 
         if state == "play":
-            stream_type = AudioPiped
+            damn = AudioPiped
             emj = "🎵"
         elif state == "vplay":
-            stream_type = VideoPiped
+            damn = VideoPiped
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
         await app.join_group_call(
             chat_id,
-            stream_type(link)
+            damn(link)
         )
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
     except Exception as e:
-        # print(e)
         return await m.edit(str(e))
 
     except requests.exceptions.RequestException as err:
