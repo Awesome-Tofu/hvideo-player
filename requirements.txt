@@ -10,5 +10,6 @@ pytz==2023.3
 pytube
 youtube-dl
 asyncio
+pySmartDL
 ffmpeg
 ffprobe
