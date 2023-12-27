@@ -23,7 +23,7 @@ async def play_command(_, message):
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
-        await music.join_group_call(
+        await app.join_group_call(
             chat_id,
             stream_type(link)
         )
