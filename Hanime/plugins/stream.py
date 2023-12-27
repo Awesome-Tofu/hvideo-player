@@ -3,11 +3,11 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types import AudioPiped, VideoPiped, AudioVideoPiped
+from pytgcalls.types.input_stream import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
 
-@bot.on_message(filters.command(["play", "vplay"]) & filters.group)
+@bot.on_message(filters.command(["play", "vplay", "test"]) & filters.group)
 async def play_command(_, message):
     try:
         chat_id = -1002107596400
