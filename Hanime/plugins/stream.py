@@ -14,6 +14,18 @@ async def download_audio(url):
     obj.wait()
     return obj.get_dest()
 
+
+async def fetch_random_file():
+    random_url = "https://hentaibar.onrender.com/random"
+    response = requests.get(random_url)
+    if response.status_code == 200:
+        data = response.json()
+        file_url = data.get("file")
+        if file_url:
+            return file_url
+    return None
+
+
 @bot.on_message(filters.command(["play", "vplay", "test"]) & filters.group)
 async def play_command(_, message):
     try:
@@ -21,18 +33,18 @@ async def play_command(_, message):
         await message.delete()
         state = message.command[0].lower()
 
+        if len(message.command) > 1 and message.command[1].lower() == "random":
+            link = await fetch_random_file()
+        else:
+            link = message.text.split(None, 1)[1]
+
         if state == "play":
             damn = AudioPiped
             emj = "🎵"
-            link = message.text.split(None, 1)[1]
         elif state == "vplay":
             damn = AudioVideoPiped
             emj = "🎬"
-            link = message.text.split(None, 1)[1]
-        elif state == "test":
-            damn = VideoPiped
-            emj = "🎬"
-            link = "test.mkv"
+
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
         audio_path = await download_audio(link)
