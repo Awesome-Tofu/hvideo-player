@@ -27,11 +27,10 @@ async def mystart(_, message):
         ]
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
-    if message.chat.type == ChatType.PRIVATE:
-        await message.reply_text(
-            START_TEXT,
-            reply_markup=reply_markup
-        )
+    await message.reply_text(
+        START_TEXT,
+        reply_markup=reply_markup
+    )
 
 @bot.on_callback_query()
 async def cb_handler(client: Client, query: CallbackQuery):
