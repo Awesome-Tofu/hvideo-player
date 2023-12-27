@@ -26,7 +26,7 @@ async def fetch_random_file(message):
     return None
 
 
-@bot.on_message(filters.command(["play", "vplay", "test"]) & filters.group)
+@bot.on_message(filters.command(["play", "vplay"]) & filters.group)
 async def play_command(_, message):
     try:
         chat_id = message.chat.id
