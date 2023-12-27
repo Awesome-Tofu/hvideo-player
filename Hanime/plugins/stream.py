@@ -2,7 +2,7 @@ import os
 import asyncio
 import subprocess
 from pyrogram import Client, filters
-from pytgcalls import StreamType
+from pytgcalls import StreamType, idle
 from pytgcalls.types.input_stream import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
@@ -38,9 +38,9 @@ async def play_command(_, message):
         audio_path = await download_audio(link)
         await app.join_group_call(
             chat_id,
-            damn(audio_path),
-            stream_type=StreamType().pulse_stream
+            damn(audio_path)
         )
+        await idle()
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
     except Exception as e:
