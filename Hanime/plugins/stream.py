@@ -26,7 +26,7 @@ async def play_command(_, message):
             emj = "🎵"
             link = message.text.split(None, 1)[1]
         elif state == "vplay":
-            damn = VideoPiped
+            damn = AudioVideoPiped
             emj = "🎬"
             link = message.text.split(None, 1)[1]
         elif state == "test":
