@@ -3,4 +3,15 @@
   "description": "Telegram vc player Bot using Pyrogram framework",
   "logo": "https://te.legra.ph/file/55225e9f7f0c1858ec306.jpg",
   "repository": "https://github.com/Awesome-tofu/hvideo-player"
-}
+},    
+  "buildpacks": [
+      {
+        "url": "heroku/python"
+      },
+      {
+        "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+      },
+      {
+         "url": "https://github.com/guilherme-otran/heroku-buildpack-ffprobe.git"
+      }
+    ]
