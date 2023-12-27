@@ -16,16 +16,16 @@ async def play_command(_, message):
         state = message.command[0].lower()
 
         if state == "play":
-            damn = AudioPiped
+            stream_type = AudioPiped
             emj = "🎵"
         elif state == "vplay":
-            damn = VideoPiped
+            stream_type = VideoPiped
             emj = "🎬"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
-        await app.join_group_call(
+        await music.join_group_call(
             chat_id,
-            damn(link)
+            stream_type(link)
         )
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
