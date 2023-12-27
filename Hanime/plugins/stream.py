@@ -17,7 +17,7 @@ async def download_audio(url):
 @bot.on_message(filters.command(["play", "vplay", "test"]) & filters.group)
 async def play_command(_, message):
     try:
-        chat_id = -1002107596400
+        chat_id = message.chat.id
         await message.delete()
         state = message.command[0].lower()
 
@@ -40,7 +40,6 @@ async def play_command(_, message):
             chat_id,
             damn(audio_path)
         )
-        await idle()
         await m.edit(f"{emj} sᴛᴀʀᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ: [Link]({link})", disable_web_page_preview=True)
 
     except Exception as e:
@@ -51,3 +50,13 @@ async def play_command(_, message):
 
     else:
         await message.reply_text("Error: kela")
+
+
+@bot.on_message(filters.command(["end"]) & filters.group)
+async def end_command(_, message):
+    try:
+        chat_id = message.chat.id
+        await app.leave_group_call(chat_id)
+        m = await message.reply_text("🔴 ʟᴇꜰᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ!")
+    except Exception as e:
+        await m.edit(f"An error occurred: {e}")
