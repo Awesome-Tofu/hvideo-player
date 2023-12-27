@@ -15,9 +15,9 @@ async def download_audio(url):
     return obj.get_dest()
 
 
-async def fetch_random_file():
+async def fetch_random_file(message):
     random_url = "https://hentaibar.onrender.com/random"
-    response = requests.get(random_url)
+    response = requests.get(random_url)    
     if response.status_code == 200:
         data = response.json()
         file_url = data.get("file")
@@ -31,10 +31,11 @@ async def play_command(_, message):
     try:
         chat_id = message.chat.id
         await message.delete()
+        m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
         state = message.command[0].lower()
 
         if len(message.command) > 1 and message.command[1].lower() == "random":
-            link = await fetch_random_file()
+            link = await fetch_random_file(message)
         else:
             link = message.text.split(None, 1)[1]
 
@@ -44,8 +45,6 @@ async def play_command(_, message):
         elif state == "vplay":
             damn = AudioVideoPiped
             emj = "🎬"
-
-        m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
         audio_path = await download_audio(link)
         await app.join_group_call(
@@ -61,7 +60,7 @@ async def play_command(_, message):
         await message.reply_text(f"Error fetching data: {err}")
 
     else:
-        await message.reply_text("Error: kela")
+        print("Error: kela")
 
 
 @bot.on_message(filters.command(["end"]) & filters.group)
