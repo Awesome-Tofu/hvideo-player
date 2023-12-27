@@ -3,24 +3,29 @@ import asyncio
 import subprocess
 from pyrogram import Client, filters
 from pytgcalls import StreamType
-from pytgcalls.types.input_stream import AudioPiped, VideoPiped
+from pytgcalls.types import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
 
 @bot.on_message(filters.command(["play", "vplay"]) & filters.group)
 async def play_command(_, message):
     try:
-        link = message.text.split(None, 1)[1]
-        chat_id = message.chat.id
+        chat_id = -1002107596400
         await message.delete()
         state = message.command[0].lower()
 
         if state == "play":
             damn = AudioPiped
             emj = "🎵"
+            link = message.text.split(None, 1)[1]
         elif state == "vplay":
             damn = VideoPiped
             emj = "🎬"
+            link = message.text.split(None, 1)[1]
+        elif state == "test":
+            damn = VideoPiped
+            emj = "🎬"
+            link = "test.mkv"
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
         await app.join_group_call(
