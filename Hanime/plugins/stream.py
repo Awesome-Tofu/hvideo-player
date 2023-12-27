@@ -11,7 +11,7 @@ import requests
 async def play_command(_, message):
     try:
         link = message.text.split(None, 1)[1]
-        chat_id = -1002107596400
+        chat_id = m.chat.id
         await message.delete()
         state = message.command[0].lower()
 
