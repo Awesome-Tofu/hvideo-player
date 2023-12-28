@@ -93,7 +93,7 @@ async def hplay_command(_, message):
             duration = random_file["duration"]          
         else:
             if len(message.command) <= 1:
-                await m.edit("❗ **PLEASE USE LIKE /hplay <query>**")
+                await message.reply_text("❗ **PLEASE USE LIKE /hplay <query>**")
                 return
             query = message.text.split(None, 1)[1]
             search_file = await fetch_hbar_search(query)
