@@ -11,9 +11,9 @@ import requests
 from pySmartDL import SmartDL
 from pyrogram.enums import ChatMemberStatus, ChatType
 from functools import wraps 
-from Hanime import SUDO
 
-COMMANDERS = [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
+
+# COMMANDERS = [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
 QUEUE = {}
 
 x = """def user_admin(mystic):
