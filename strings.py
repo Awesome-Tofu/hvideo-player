@@ -12,7 +12,7 @@ HELP_TEXT = f"""
 
 ⚔️-- **Available Commands**:--
 
-\u2022 `/hplay` <link> - Stream Video From Link.
+\u2022 `/hplay` <query> - Stream Hentai from query.
 \u2022 `/hplay` random - Stream Random Hentai Video.
 \u2022 `/end` - End Video Streaming.
 """
