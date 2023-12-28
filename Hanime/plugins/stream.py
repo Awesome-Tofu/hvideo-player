@@ -160,3 +160,31 @@ async def resume(_, message):
             await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+
+
+@bot.on_message(filters.command("mute") & filters.group)
+async def mute(_, message):
+    await message.delete()
+    chat_id = message.chat.id
+    if chat_id in QUEUE:
+        try:
+            await app.mute_stream(chat_id)
+            await message.reply_text("🔇 ᴍᴜᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+    else:
+        await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+        
+        
+@bot.on_message(filters.command("unmute") & filters.group)
+async def unmute(_, message):
+    await message.delete()
+    chat_id = message.chat.id
+    if chat_id in QUEUE:
+        try:
+            await app.unmute_stream(chat_id)
+            await message.reply_text("🔊 ᴜɴᴍᴜᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+    else:
+        await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
