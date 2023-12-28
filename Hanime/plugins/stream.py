@@ -9,8 +9,37 @@ from pytgcalls.types.input_stream import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
 import requests
 from pySmartDL import SmartDL
+from pyrogram.enums import ChatMemberStatus, ChatType
+from functools import wraps 
+from Hanime import SUDO
 
+COMMANDERS = [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
 QUEUE = {}
+
+
+def user_admin(mystic):
+    @wraps(mystic)
+    async def wrapper(app : Client, message : Message,*args,**kwargs):
+        chat_type = message.chat.type
+        if chat_type == ChatType.PRIVATE:
+            return await message.reply("Use This Command In Groups Only")
+        if message.sender_chat:
+            if message.sender_chat.id == message.chat.id:
+                return await message.reply("You Are Anonymous Admin Please Use User ID")
+            else:
+                return await message.reply_text("You Are Not Admin")
+                
+        else:
+            user_id = message.from_user.id    
+            chat_id = message.chat.id
+            user = await app.get_chat_member(chat_id,user_id) 
+        
+            if (user.status not in COMMANDERS) and user_id not in SUDO:
+                return await message.reply_text("You Are Not Admin")
+                                                                            
+        return await mystic(app,message,*args,**kwargs)
+
+    return wrapper
 
 
 async def download_audio(url):
@@ -94,6 +123,7 @@ async def hplay_command(_, message):
 
 
 @bot.on_message(filters.command(["end"]) & filters.group)
+@user_admin
 async def end_command(_, message):
     try:
         chat_id = message.chat.id
@@ -104,6 +134,7 @@ async def end_command(_, message):
 
 
 @bot.on_message(filters.command("pause") & filters.group)
+@user_admin
 async def pause(_, message):
     await message.delete()
     chat_id = message.chat.id
@@ -118,6 +149,7 @@ async def pause(_, message):
         
         
 @bot.on_message(filters.command("resume") & filters.group)
+@user_admin
 async def resume(_, message):
     await message.delete()
     chat_id = message.chat.id
