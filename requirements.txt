@@ -3,12 +3,7 @@ py-tgcalls
 requests
 tgcrypto
 pymongo==4.3.3
-youtube-search-python
-yt-dlp
-play-scraper
 pytz==2023.3
-pytube
-youtube-dl
 asyncio
 pySmartDL
 ffmpeg

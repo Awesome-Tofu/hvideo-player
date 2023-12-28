@@ -25,7 +25,7 @@ async def fetch_random_file():
         thumb_url = data.get("thumbnailUrl")
         duration = data.get("duration")
         if file_url:
-            return {file_url, title, thumb_url, duration}
+            return {"file_url": file_url, "title": title, "thumb_url": thumb_url, "duration": duration}
     return None
 
 
@@ -52,9 +52,10 @@ async def hplay_command(_, message):
             AudioVideoPiped(audio_path)
         )
         await m.delete()
-        await message.send_photo(chat_id=chat_id,photo=thumb_url,caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n", disable_web_page_preview=True)
+        await message.reply_photo(photo=thumb_url,caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n")
 
     except Exception as e:
+        print(e)
         return await m.edit(str(e))
 
     except requests.exceptions.RequestException as err:
