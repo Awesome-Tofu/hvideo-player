@@ -75,7 +75,7 @@ async def eval(client, message):
 
 @bot.on_message(filters.command(["sh","shell"],["?","!",".","*","/","$",]))
 async def sh(client, message):
-    if message.from_user.id !=5690711835:
+    if message.from_user.id not in DEV_LIST:
          return await message.reply_text("`You Don't Have Enough Rights To Run This!`")
          await message.reply_text("`No Input Found!`")
     else:
