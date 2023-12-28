@@ -51,6 +51,7 @@ async def hplay_command(_, message):
         chat_id = message.chat.id
         await message.delete()
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
+        QUEUE[chat_id] = True
         state = message.command[0].lower()
 
         if len(message.command) > 1 and message.command[1].lower() == "random":
@@ -97,3 +98,31 @@ async def end_command(_, message):
         m = await message.reply_text("🔴 ʟᴇꜰᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ!")
     except Exception as e:
         await m.edit(f"An error occurred: {e}")
+
+
+@bot.on_message(filters.command("pause") & filters.group)
+async def pause(_, message):
+    await message.delete()
+    chat_id = message.chat.id
+    if chat_id in QUEUE:
+        try:
+            await app.pause_stream(chat_id)
+            await message.reply_text("II ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+    else:
+        await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+        
+        
+@bot.on_message(filters.command("resume") & filters.group)
+async def resume(_, message):
+    await message.delete()
+    chat_id = message.chat.id
+    if chat_id in QUEUE:
+        try:
+            await app.resume_stream(chat_id)
+            await message.reply_text("▷ ʀᴇsᴜᴍᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+    else:
+        await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
