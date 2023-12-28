@@ -10,6 +10,9 @@ from Hanime import app, bot, music
 import requests
 from pySmartDL import SmartDL
 
+QUEUE = {}
+
+
 async def download_audio(url):
     obj = SmartDL(url, verify=False)
     obj.start()
