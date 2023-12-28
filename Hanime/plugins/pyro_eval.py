@@ -5,7 +5,7 @@ from contextlib import redirect_stdout
 from subprocess import getoutput as run
 from pyrogram import filters
 from pyrogram import Client 
-from hanime import shivuu as bot
+from Hanime import bot
 from datetime import datetime
 
 DEV_LIST = [5690711835,5015417782,5915335486]
