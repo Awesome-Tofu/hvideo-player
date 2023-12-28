@@ -16,8 +16,7 @@ from Hanime import SUDO
 COMMANDERS = [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
 QUEUE = {}
 
-
-def user_admin(mystic):
+x = """def user_admin(mystic):
     @wraps(mystic)
     async def wrapper(app : Client, message : Message,*args,**kwargs):
         chat_type = message.chat.type
@@ -39,7 +38,7 @@ def user_admin(mystic):
                                                                             
         return await mystic(app,message,*args,**kwargs)
 
-    return wrapper
+    return wrapper"""
 
 
 async def download_audio(url):
@@ -123,7 +122,7 @@ async def hplay_command(_, message):
 
 
 @bot.on_message(filters.command(["end"]) & filters.group)
-@user_admin
+# @user_admin
 async def end_command(_, message):
     try:
         chat_id = message.chat.id
@@ -134,7 +133,7 @@ async def end_command(_, message):
 
 
 @bot.on_message(filters.command("pause") & filters.group)
-@user_admin
+# @user_admin
 async def pause(_, message):
     await message.delete()
     chat_id = message.chat.id
@@ -149,7 +148,7 @@ async def pause(_, message):
         
         
 @bot.on_message(filters.command("resume") & filters.group)
-@user_admin
+# @user_admin
 async def resume(_, message):
     await message.delete()
     chat_id = message.chat.id
