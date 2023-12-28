@@ -51,7 +51,7 @@ async def hplay_command(_, message):
             chat_id,
             AudioVideoPiped(audio_path)
         )
-        awawit m.delete()
+        await m.delete()
         await message.send_photo(chat_id=chat_id,photo=thumb_url,caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n", disable_web_page_preview=True)
 
     except Exception as e:
