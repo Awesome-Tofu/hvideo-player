@@ -205,7 +205,7 @@ async def hplay_command(_, message):
         current_queue = get_queue(chat_id)
         if current_queue:
             caption = (
-                f"**♬ Added to Queue | Position:** {queue_index + "1"}\n\n"
+                f"**♬ Added to Queue | Position:** {queue_index}\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
             await m.edit(caption, reply_markup=None)
