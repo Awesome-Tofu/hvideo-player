@@ -13,13 +13,11 @@ from pyrogram.enums import ChatMemberStatus, ChatType
 from functools import wraps 
 from queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
 
-
 async def download_audio(url):
     obj = SmartDL(url, verify=False)
     obj.start()
     obj.wait()
     return obj.get_dest()
-
 
 async def fetch_hbar(url):
     response = requests.get(url)    
@@ -45,9 +43,7 @@ async def fetch_hbar_search(query):
         duration = fetched_vid.get("duration")
         if data:
             return {"file_url": file_url, "title": title, "thumb_url": thumb_url, "duration": duration}
-    return None    
-
-
+    return None
 
 @bot.on_message(filters.command(["hplay"]) & filters.group)
 async def hplay_command(_, message):
@@ -55,7 +51,10 @@ async def hplay_command(_, message):
         chat_id = message.chat.id
         await message.delete()
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
-        QUEUE[chat_id] = True
+
+       
+        queue_index = add_to_queue(chat_id, title, duration, thumb_url)
+
         state = message.command[0].lower()
 
         if len(message.command) > 1 and message.command[1].lower() == "random":
@@ -81,7 +80,13 @@ async def hplay_command(_, message):
             AudioVideoPiped(audio_path)
         )
         await m.delete()
-        await message.reply_photo(photo=thumb_url,caption=f"**♬ Started Streaming |**\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
+
+       
+        current_queue = get_queue(chat_id)
+        if current_queue:
+            await message.reply_photo(photo=thumb_url, caption=f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
+        else:
+            await message.reply_photo(photo=thumb_url, caption=f"**♬ Started Streaming |**\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
 
     except Exception as e:
         print(e)
@@ -93,20 +98,20 @@ async def hplay_command(_, message):
     else:
         print("Error: kela")
 
-
 @bot.on_message(filters.command(["end"]) & filters.group)
-# @user_admin
 async def end_command(_, message):
     try:
         chat_id = message.chat.id
+
+        # Use clear_queue function to clear the queue for the current chat ID
+        clear_queue(chat_id)
+
         await app.leave_group_call(chat_id)
         m = await message.reply_text("🔴 ʟᴇꜰᴛ ᴛʜᴇ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ!")
     except Exception as e:
         await m.edit(f"An error occurred: {e}")
 
-
 @bot.on_message(filters.command("pause") & filters.group)
-# @user_admin
 async def pause(_, message):
     await message.delete()
     chat_id = message.chat.id
@@ -118,10 +123,8 @@ async def pause(_, message):
             await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
-        
-        
+
 @bot.on_message(filters.command("resume") & filters.group)
-# @user_admin
 async def resume(_, message):
     await message.delete()
     chat_id = message.chat.id
@@ -133,7 +136,6 @@ async def resume(_, message):
             await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
-
 
 @bot.on_message(filters.command("mute") & filters.group)
 async def mute(_, message):
@@ -147,8 +149,7 @@ async def mute(_, message):
             await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
-        
-        
+
 @bot.on_message(filters.command("unmute") & filters.group)
 async def unmute(_, message):
     await message.delete()
