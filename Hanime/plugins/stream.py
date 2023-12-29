@@ -208,13 +208,13 @@ async def hplay_command(_, message):
                 f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
-            await m.edit(caption, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=None)
+            await m.edit(caption, parse_mode=enums.ParseMode.HTML, reply_markup=None)
         else:
             caption = (
                 f"**♬ Started Streaming |**\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
-            await m.edit(caption, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=BUTTONS)
+            await message.send_photo(chat_id, thumb_url, caption, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=BUTTONS)
 
     except Exception as e:
         print(e)
