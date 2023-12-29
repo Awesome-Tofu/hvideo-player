@@ -11,34 +11,7 @@ import requests
 from pySmartDL import SmartDL
 from pyrogram.enums import ChatMemberStatus, ChatType
 from functools import wraps 
-
-
-# COMMANDERS = [ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.OWNER]
-QUEUE = {}
-
-x = """def user_admin(mystic):
-    @wraps(mystic)
-    async def wrapper(app : Client, message : Message,*args,**kwargs):
-        chat_type = message.chat.type
-        if chat_type == ChatType.PRIVATE:
-            return await message.reply("Use This Command In Groups Only")
-        if message.sender_chat:
-            if message.sender_chat.id == message.chat.id:
-                return await message.reply("You Are Anonymous Admin Please Use User ID")
-            else:
-                return await message.reply_text("You Are Not Admin")
-                
-        else:
-            user_id = message.from_user.id    
-            chat_id = message.chat.id
-            user = await app.get_chat_member(chat_id,user_id) 
-        
-            if (user.status not in COMMANDERS) and user_id not in SUDO:
-                return await message.reply_text("You Are Not Admin")
-                                                                            
-        return await mystic(app,message,*args,**kwargs)
-
-    return wrapper"""
+from queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
 
 
 async def download_audio(url):
