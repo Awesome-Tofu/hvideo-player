@@ -195,6 +195,7 @@ async def hplay_command(_, message):
             duration = search_file["duration"]
 
         audio_path = await download_audio(link)
+        add_to_queue(chat_id, title, duration, thumb_url, link)
         await app.join_group_call(
             chat_id,
             AudioVideoPiped(audio_path)
