@@ -13,6 +13,111 @@ from pyrogram.enums import ChatMemberStatus, ChatType
 from functools import wraps 
 from queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
 
+
+
+
+
+BUTTONS = InlineKeyboardMarkup(
+    [ 
+        [ 
+            InlineKeyboardButton(text="▷", callback_data="pause"),
+            InlineKeyboardButton(text="II", callback_data="resume"),
+            InlineKeyboardButton(text="‣‣I", callback_data="skip"),
+            InlineKeyboardButton(text="▢", callback_data="stop")
+        ],
+        [ 
+            InlineKeyboardButton(text="🔇", callback_data="mute"),
+            InlineKeyboardButton(text="🔊", callback_data="unmute")
+        ],
+        [ 
+            InlineKeyboardButton(text="• ᴄʟᴏsᴇ •", callback_data="ok")
+        ]
+    ]
+)
+
+
+async def skip_current_song(chat_id):
+    if chat_id in QUEUE:
+        chat_queue = get_queue(chat_id)
+        if len(chat_queue) == 1:
+            await app.leave_group_call(chat_id)
+            clear_queue(chat_id)
+            return 1
+        else:
+            title = chat_queue[1][0]
+            duration = chat_queue[1][1]
+            thumb_url = chat_queue[1][2]            
+            pop_an_item(chat_id)
+            await bot.send_photo(chat_id, photo = thumb_url,
+                                 caption = f"[»] <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{title}]\n\n[»] <b>ᴅᴜʀᴀᴛɪᴏɴ:</b> {duration}",
+                                 reply_markup = BUTTONS)
+            return [title, duration, thumb_url]
+    else:
+        return 0
+
+@bot.on_callback_query()
+async def callbacks(_, cq: CallbackQuery):
+    user_id = cq.from_user.id
+    try:
+        user = await cq.message.chat.get_member(user_id)
+        admin_strings = ("creator", "administrator")
+        if user.status not in admin_strings:
+            is_admin = False
+        else:
+            is_admin = True
+    except ValueError:
+        is_admin = True        
+    if not is_admin:
+        return await cq.answer("[»] ʏᴏᴜ ᴀʀᴇɴ'ᴛ ᴀɴ ᴀᴅᴍɪɴ.")   
+    chat_id = cq.message.chat.id
+    data = cq.data
+    if data == "close":
+        return await cq.message.delete()
+    if not chat_id in QUEUE:
+        return await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+
+    if data == "pause":
+        try:
+            await app.pause_stream(chat_id)
+            await cq.answer("[»] ᴘᴀᴜsᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+      
+    elif data == "resume":
+        try:
+            await app.resume_stream(chat_id)
+            await cq.answer("[»] Resumed streaming.")
+        except:
+            await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")   
+
+    elif data == "stop":
+        await app.leave_group_call(chat_id)
+        clear_queue(chat_id)
+        await cq.answer("[»] sᴛᴏᴘᴘᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")  
+
+    elif data == "mute":
+        try:
+            await app.mute_stream(chat_id)
+            await cq.answer("[»] ᴍᴜᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+            
+    elif data == "unmute":
+        try:
+            await app.unmute_stream(chat_id)
+            await cq.answer("[»] ᴜɴᴍᴜᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        except:
+            await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+            
+    elif data == "skip":
+        op = await skip_current_video(chat_id)
+        if op == 0:
+            await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ᴛᴏ sᴋɪᴘ.")
+        elif op == 1:
+            await cq.answer("[»] ᴇᴍᴘᴛʏ ǫᴜᴇᴜᴇ, sᴛᴏᴘᴘᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+        else:
+            await cq.answer("[»] sᴋɪᴘᴘᴇᴅ.")
+
 async def download_audio(url):
     obj = SmartDL(url, verify=False)
     obj.start()
