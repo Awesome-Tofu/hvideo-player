@@ -12,7 +12,7 @@ from pySmartDL import SmartDL
 from pyrogram.enums import ChatMemberStatus, ChatType
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from functools import wraps 
-from queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
+from Hanime.function.queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
 
 BUTTONS = InlineKeyboardMarkup(
     [ 
