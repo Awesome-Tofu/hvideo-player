@@ -3,7 +3,7 @@ import asyncio
 import random
 import aiohttp
 import subprocess
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from pytgcalls import StreamType, idle
 from pytgcalls.types.input_stream import AudioPiped, VideoPiped, AudioVideoPiped
 from Hanime import app, bot, music
@@ -32,7 +32,7 @@ BUTTONS = InlineKeyboardMarkup(
     ]
 )
 
-async def skip_current_song(chat_id):
+async def skip_current_song(chat_id, link):
     if chat_id in QUEUE:
         chat_queue = get_queue(chat_id)
         if len(chat_queue) == 1:
@@ -171,7 +171,6 @@ async def fetch_hbar_search(query):
 async def hplay_command(_, message):
     try:
         chat_id = message.chat.id
-        await message.delete()
         m = await message.reply_text("🔄 Processing...")
 
         state = message.command[0].lower()
@@ -184,7 +183,7 @@ async def hplay_command(_, message):
             duration = random_file["duration"]
         else:
             if len(message.command) <= 1:
-                await message.reply_text("❗ **PLEASE USE LIKE /hplay <query>**")
+                await m.edit("❗ **PLEASE USE LIKE /hplay <query>**")
                 return
             query = message.text.split(None, 1)[1]
             search_file = await fetch_hbar_search(query)
@@ -196,12 +195,12 @@ async def hplay_command(_, message):
         queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)
         audio_path = await download_audio(link)
 
-        await app.join_group_call(
-            chat_id,
-            AudioVideoPiped(audio_path)
-        )
-
-        await m.delete()
+        # Join the voice chat only if not already joined
+        if chat_id not in QUEUE:
+            await app.join_group_call(
+                chat_id,
+                AudioVideoPiped(audio_path)
+            )
 
         current_queue = get_queue(chat_id)
         if current_queue:
@@ -209,13 +208,13 @@ async def hplay_command(_, message):
                 f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
-            await message.reply_photo(photo=thumb_url, caption=caption, parse_mode="MarkdownV2")
+            await m.edit(caption, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=None)
         else:
             caption = (
                 f"**♬ Started Streaming |**\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
-            await message.reply_photo(photo=thumb_url, caption=caption, reply_markup=BUTTONS, parse_mode="MarkdownV2")
+            await m.edit(caption, parse_mode=enums.ParseMode.MARKDOWN, reply_markup=BUTTONS)
 
     except Exception as e:
         print(e)
@@ -226,6 +225,8 @@ async def hplay_command(_, message):
 
     else:
         print("Error: kela")
+
+
 
 @bot.on_message(filters.command(["end"]) & filters.group)
 async def end_command(_, message):
@@ -325,20 +326,27 @@ async def playlist(_, message):
     chat_id = message.chat.id
     if chat_id in QUEUE:
         chat_queue = get_queue(chat_id)
-        if len(chat_queue) == 1:
-            await message.delete()
-            await message.reply_text(
-                f"▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}`",
-                disable_web_page_preview=True,
-            )
+        if chat_queue and len(chat_queue) > 0:
+            if len(chat_queue[0]) >= 5:  # Ensure there are at least 5 elements in chat_queue[0]
+                await message.delete()
+                await message.reply_text(
+                    f"▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}`",
+                    disable_web_page_preview=True,
+                )
+                if len(chat_queue) > 1:
+                    out = f"<b>📃 Player queue:</b> \n\n▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}` \n"
+                    for x in range(1, len(chat_queue)):
+                        if len(chat_queue[x]) >= 3:  # Ensure there are at least 3 elements in chat_queue[x]
+                            title = chat_queue[x][0]
+                            link = chat_queue[x][4]
+                            duration = chat_queue[x][2]
+                            out += f"\n<b>#️⃣ {x}</b> - [{title}]({link}) | `{duration}` \n"
+                else:
+                    out = "<b>📃 Player queue is empty.</b>"
+                await message.reply_text(out, disable_web_page_preview=True)
+            else:
+                await message.reply_text("❗ Insufficient elements in the queue data.")
         else:
-            out = f"<b>📃 Player queue:</b> \n\n▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}` \n"
-            l = len(chat_queue)
-            for x in range(1, l):
-                title = chat_queue[x][0]
-                link = chat_queue[x][4]
-                duration = chat_queue[x][2]
-                out = out + "\n" + f"<b>#️⃣ {x}</b> - [{title}]({link}) | `{duration}` \n"
-            await message.reply_text(out, disable_web_page_preview=True)
+            await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
