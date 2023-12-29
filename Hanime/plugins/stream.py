@@ -10,12 +10,9 @@ from Hanime import app, bot, music
 import requests
 from pySmartDL import SmartDL
 from pyrogram.enums import ChatMemberStatus, ChatType
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from functools import wraps 
 from queue import QUEUE, add_to_queue, get_queue, clear_queue, pop_an_item
-
-
-
-
 
 BUTTONS = InlineKeyboardMarkup(
     [ 
@@ -30,11 +27,10 @@ BUTTONS = InlineKeyboardMarkup(
             InlineKeyboardButton(text="🔊", callback_data="unmute")
         ],
         [ 
-            InlineKeyboardButton(text="• ᴄʟᴏsᴇ •", callback_data="ok")
+            InlineKeyboardButton(text="• ᴄʟᴏsᴇ •", callback_data="close")
         ]
     ]
 )
-
 
 async def skip_current_song(chat_id):
     if chat_id in QUEUE:
@@ -44,16 +40,35 @@ async def skip_current_song(chat_id):
             clear_queue(chat_id)
             return 1
         else:
-            title = chat_queue[1][0]
-            duration = chat_queue[1][1]
-            thumb_url = chat_queue[1][2]            
-            pop_an_item(chat_id)
-            await bot.send_photo(chat_id, photo = thumb_url,
-                                 caption = f"[»] <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{title}]\n\n[»] <b>ᴅᴜʀᴀᴛɪᴏɴ:</b> {duration}",
-                                 reply_markup = BUTTONS)
-            return [title, duration, thumb_url]
+            audio_path = await download_audio(link)
+            
+            await app.join_group_call(
+                chat_id,
+                AudioVideoPiped(audio_path)
+            )
+            
+            title, duration, thumb_url = pop_an_item(chat_id)
+            await bot.send_photo(chat_id, photo=thumb_url,
+                                caption=f"[»] <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{title}]\n\n[»] <b>ᴅᴜʀᴀᴛɪᴏɴ:</b> {duration}",
+                                reply_markup=BUTTONS)
+            return [title, duration, thumb_url, link]
     else:
         return 0
+
+async def skip_item(chat_id, lol):
+    if chat_id in QUEUE:
+        chat_queue = get_queue(chat_id)
+        try:
+            x = int(lol)
+            title = chat_queue[x][0]
+            chat_queue.pop(x)
+            return title
+        except Exception as e:
+            print(e)
+            return 0
+    else:
+        return 0
+
 
 @bot.on_callback_query()
 async def callbacks(_, cq: CallbackQuery):
@@ -66,9 +81,11 @@ async def callbacks(_, cq: CallbackQuery):
         else:
             is_admin = True
     except ValueError:
-        is_admin = True        
+        is_admin = True
+
     if not is_admin:
         return await cq.answer("[»] ʏᴏᴜ ᴀʀᴇɴ'ᴛ ᴀɴ ᴀᴅᴍɪɴ.")   
+
     chat_id = cq.message.chat.id
     data = cq.data
     if data == "close":
@@ -110,7 +127,7 @@ async def callbacks(_, cq: CallbackQuery):
             await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
             
     elif data == "skip":
-        op = await skip_current_video(chat_id)
+        op = await skip_current_song(chat_id)
         if op == 0:
             await cq.answer("[»] ɴᴏᴛʜɪɴɢ ɪɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ᴛᴏ sᴋɪᴘ.")
         elif op == 1:
@@ -158,7 +175,7 @@ async def hplay_command(_, message):
         m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
 
        
-        queue_index = add_to_queue(chat_id, title, duration, thumb_url)
+        queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)
 
         state = message.command[0].lower()
 
@@ -191,7 +208,7 @@ async def hplay_command(_, message):
         if current_queue:
             await message.reply_photo(photo=thumb_url, caption=f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
         else:
-            await message.reply_photo(photo=thumb_url, caption=f"**♬ Started Streaming |**\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
+            await message.reply_photo(photo=thumb_url, caption=f"**♬ Started Streaming |**\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n", reply_markup=BUTTONS)
 
     except Exception as e:
         print(e)
@@ -265,5 +282,56 @@ async def unmute(_, message):
             await message.reply_text("🔊 ᴜɴᴍᴜᴛᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
         except:
             await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+    else:
+        await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
+
+
+@bot.on_message(filters.command("skip") & filters.group)
+async def skip(_, message):
+    await message.delete()
+    chat_id = message.chat.id
+    if len(message.command) < 2:
+        op = await skip_current_song(chat_id)
+        if op == 0:
+            await message.reply_text("❗️ɴᴏᴛʜɪɴɢ ɪɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ᴛᴏ sᴋɪᴘ.")
+        elif op == 1:
+            await message.reply_text("❗️ᴇᴍᴘᴛʏ ǫᴜᴇᴜᴇ, sᴛᴏᴘᴘᴇᴅ sᴛʀᴇᴀᴍɪɴɢ.")
+    else:
+        skip = message.text.split(None, 1)[1]
+        out = "🗑 <ʙ>ʀᴇᴍᴏᴠᴇᴅ ᴛʜᴇ ғᴏʟʟᴏᴡɪɴɢ sᴏɴɢs ғʀᴏᴍ ᴛʜᴇ ǫᴜᴇᴜᴇ:</b> \n"
+        if chat_id in QUEUE:
+            items = [int(x) for x in skip.split(" ") if x.isdigit()]
+            items.sort(reverse=True)
+            for x in items:
+                if x == 0:
+                    pass
+                else:
+                    hm = await skip_item(chat_id, x)
+                    if hm == 0:
+                        pass
+                    else:
+                        out = out + "\n" + f"<b>#️⃣ {x}</b> - {hm}"
+            await message.reply_text(out)
+
+@bot.on_message(filters.command(["playlist", "queue"]) & filters.group)
+async def playlist(_, message):
+    chat_id = message.chat.id
+    if chat_id in QUEUE:
+        chat_queue = get_queue(chat_id)
+        if len(chat_queue) == 1:
+            await message.delete()
+            await message.reply_text(
+                f"▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}`",
+                disable_web_page_preview=True,
+            )
+        else:
+            out = f"<b>📃 Player queue:</b> \n\n▶️ <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{chat_queue[0][0]}]({chat_queue[0][2]}) | `{chat_queue[0][4]}` \n"
+            l = len(chat_queue)
+            for x in range(1, l):
+                title = chat_queue[x][0]
+                link = chat_queue[x][4]
+                duration = chat_queue[x][2]
+                out = out + "\n" + f"<b>#️⃣ {x}</b> - [{title}]({link}) | `{duration}` \n"
+            await message.reply_text(out, disable_web_page_preview=True)
     else:
         await message.reply_text("❗ɴᴏᴛʜɪɴɢ ɪs ᴘʟᴀʏɪɴɢ.")
