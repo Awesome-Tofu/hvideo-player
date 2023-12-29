@@ -171,44 +171,41 @@ async def fetch_hbar_search(query):
 async def hplay_command(_, message):
     try:
         chat_id = message.chat.id
-        m = await message.reply_text("🔄 Processing...")
-
         state = message.command[0].lower()
 
+        # Process command based on state
         if len(message.command) > 1 and message.command[1].lower() == "random":
             random_file = await fetch_hbar("https://hentaibar.onrender.com/random")
-            link = random_file["file_url"]
-            title = random_file["title"]
-            thumb_url = random_file["thumb_url"]
-            duration = random_file["duration"]
         else:
             if len(message.command) <= 1:
-                await m.edit("❗ **PLEASE USE LIKE /hplay <query>**")
-                return
+                return await message.reply_text("❗ **PLEASE USE LIKE /hplay <query>**")
+
             query = message.text.split(None, 1)[1]
             search_file = await fetch_hbar_search(query)
-            link = search_file["file_url"]
-            title = search_file["title"]
-            thumb_url = search_file["thumb_url"]
-            duration = search_file["duration"]
+            if not search_file:
+                return await message.reply_text("❗ **NO RESULTS FOUND**")
 
+            random_file = search_file
+
+        link = random_file["file_url"]
+        title = random_file["title"]
+        thumb_url = random_file["thumb_url"]
+        duration = random_file["duration"]
+
+        # Add to queue and join the voice chat if not joined
         queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)
-        audio_path = await download_audio(link)
-
-        # Join the voice chat only if not already joined
         if chat_id not in QUEUE:
-            await app.join_group_call(
-                chat_id,
-                AudioVideoPiped(audio_path)
-            )
+            audio_path = await download_audio(link)
+            await app.join_group_call(chat_id, AudioVideoPiped(audio_path))
 
+        # Send response
         current_queue = get_queue(chat_id)
         if current_queue:
             caption = (
                 f"**♬ Added to Queue | Position:** {queue_index}\n\n"
                 f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
             )
-            await m.edit(caption, reply_markup=None)
+            await message.reply_photo(chat_id, thumb_url, caption, reply_markup=BUTTONS)
         else:
             caption = (
                 f"**♬ Started Streaming |**\n\n"
@@ -218,13 +215,10 @@ async def hplay_command(_, message):
 
     except Exception as e:
         print(e)
-        return await m.edit(str(e))
+        return await message.reply_text(f"❗ **ERROR:** {e}")
 
     except requests.exceptions.RequestException as err:
         await message.reply_text(f"Error fetching data: {err}")
-
-    else:
-        print("Error: kela")
 
 
 
@@ -299,7 +293,7 @@ async def skip(_, message):
     await message.delete()
     chat_id = message.chat.id
     if len(message.command) < 2:
-        op = await skip_current_song(chat_id)
+        op = await skip_current_song(chat_id, link)
         if op == 0:
             await message.reply_text("❗️ɴᴏᴛʜɪɴɢ ɪɴ ᴛʜᴇ ǫᴜᴇᴜᴇ ᴛᴏ sᴋɪᴘ.")
         elif op == 1:
