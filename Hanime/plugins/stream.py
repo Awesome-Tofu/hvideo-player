@@ -172,10 +172,7 @@ async def hplay_command(_, message):
     try:
         chat_id = message.chat.id
         await message.delete()
-        m = await message.reply_text("🔄 ᴘʀᴏᴄᴇssɪɴɢ...")
-
-       
-        queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)
+        m = await message.reply_text("🔄 Processing...")
 
         state = message.command[0].lower()
 
@@ -184,7 +181,7 @@ async def hplay_command(_, message):
             link = random_file["file_url"]
             title = random_file["title"]
             thumb_url = random_file["thumb_url"]
-            duration = random_file["duration"]          
+            duration = random_file["duration"]
         else:
             if len(message.command) <= 1:
                 await message.reply_text("❗ **PLEASE USE LIKE /hplay <query>**")
@@ -195,20 +192,30 @@ async def hplay_command(_, message):
             title = search_file["title"]
             thumb_url = search_file["thumb_url"]
             duration = search_file["duration"]
-        queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)        
+
+        queue_index = add_to_queue(chat_id, title, duration, thumb_url, link)
         audio_path = await download_audio(link)
+
         await app.join_group_call(
             chat_id,
             AudioVideoPiped(audio_path)
         )
+
         await m.delete()
 
-       
         current_queue = get_queue(chat_id)
         if current_queue:
-            await message.reply_photo(photo=thumb_url, caption=f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n")
+            caption = (
+                f"**♬ Added to Queue | Position:** {queue_index + 1}\n\n"
+                f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
+            )
+            await message.reply_photo(photo=thumb_url, caption=caption, parse_mode="MarkdownV2")
         else:
-            await message.reply_photo(photo=thumb_url, caption=f"**♬ Started Streaming |**\n\n**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n", reply_markup=BUTTONS)
+            caption = (
+                f"**♬ Started Streaming |**\n\n"
+                f"**⋆ Title** : {title}\n**⋆ Duration** : {duration}\n"
+            )
+            await message.reply_photo(photo=thumb_url, caption=caption, reply_markup=BUTTONS, parse_mode="MarkdownV2")
 
     except Exception as e:
         print(e)
