@@ -154,7 +154,7 @@ async def fetch_hbar(url):
     return None
 
 async def fetch_hbar_search(query):
-    response = requests.get(f"https://hentaibar.onrender.com/search/{query}/1")    
+    response = requests.get(f"https://hentaibar-api.onrender.com/search/{query}/1")    
     if response.status_code == 200:
         data = response.json()
         result = random.choice(data["results"])
@@ -176,7 +176,7 @@ async def hplay_command(_, message):
         state = message.command[0].lower()
 
         if len(message.command) > 1 and message.command[1].lower() == "random":
-            random_file = await fetch_hbar("https://hentaibar.onrender.com/random")
+            random_file = await fetch_hbar("https://hentaibar-api.onrender.com/random")
             link = random_file["file_url"]
             title = random_file["title"]
             thumb_url = random_file["thumb_url"]
