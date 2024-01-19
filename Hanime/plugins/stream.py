@@ -50,6 +50,7 @@ async def skip_current_song(chat_id, link):
             title, duration, thumb_url = pop_an_item(chat_id)
             await bot.send_photo(chat_id, photo=thumb_url,
                                 caption=f"[»] <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{title}]\n\n[»] <b>ᴅᴜʀᴀᴛɪᴏɴ:</b> {duration}",
+                                has_spoiler=true,
                                 reply_markup=BUTTONS)
             return [title, duration, thumb_url, link]
     else:
