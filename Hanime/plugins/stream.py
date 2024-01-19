@@ -202,7 +202,7 @@ async def hplay_command(_, message):
             AudioVideoPiped(audio_path)
         )
         await m.delete()
-        await message.reply_photo(photo=thumb_url, caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n")
+        await message.reply_photo(photo=thumb_url, caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n",has_spoiler=true)
 
     except Exception as e:
         print(e)
