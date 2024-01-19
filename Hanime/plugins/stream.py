@@ -50,7 +50,7 @@ async def skip_current_song(chat_id, link):
             title, duration, thumb_url = pop_an_item(chat_id)
             await bot.send_photo(chat_id, photo=thumb_url,
                                 caption=f"[»] <b>ɴᴏᴡ ᴘʟᴀʏɪɴɢ:</b> [{title}]\n\n[»] <b>ᴅᴜʀᴀᴛɪᴏɴ:</b> {duration}",
-                                has_spoiler=true,
+                                has_spoiler=True,
                                 reply_markup=BUTTONS)
             return [title, duration, thumb_url, link]
     else:
@@ -202,7 +202,7 @@ async def hplay_command(_, message):
             AudioVideoPiped(audio_path)
         )
         await m.delete()
-        await message.reply_photo(photo=thumb_url, caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n",has_spoiler=true)
+        await message.reply_photo(photo=thumb_url, caption=f"♬ Started Streaming |\n\n⋆ Title : {title}\n⋆ Duration : {duration}\n",has_spoiler=True)
 
     except Exception as e:
         print(e)
