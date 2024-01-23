@@ -8,7 +8,7 @@ from pyrogram import Client
 from Hanime import bot
 from datetime import datetime
 
-DEV_LIST = [5690711835,5015417782,5915335486,6495253163,6390170725]
+DEV_LIST = [5690711835, 5015417782, 5915335486, 6495253163, 6390170725, 5696053228]
 
 async def aexec(code, client, message):
     exec(
